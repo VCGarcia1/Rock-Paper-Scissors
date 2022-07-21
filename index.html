@@ -8,6 +8,9 @@
     </body>
     <script>
 
+        let player_wins = 0
+        let computer_wins = 0
+
         // Create randomized choice by computer
         function getComputerChoice(){
             const choice = ['Rock', 'Paper', 'Scissors']
@@ -31,39 +34,55 @@
         function playRound(playerSelection, computerSelection){
             //Make player's selection case insensitive
             if (playerSelection === computerSelection){
-                return 'Tied Game!'
+                return 'You tied this round!'
             } else if (playerSelection == 'Rock') {
-                return (computerSelection == 'Paper') ? 'You Lose! Paper beats Rock' : 'You win! Rock beats Scissors'
+                if (computerSelection == 'Paper') {
+                    computer_wins+=1
+                    return 'You Lose! Paper beats Rock'
+                } else {
+                    player_wins+=1
+                    return 'You win! Rock beats Scissors'
+                }
             } else if (playerSelection == 'Scissors') {
-                return (computerSelection == 'Rock') ? 'You Lose! Rock beats Scissors' : 'You win! Scissors beat Paper'
-            } else if (playerSelection == 'Paper') {
-                return (computerSelection == 'Scissors') ? 'You Lose! Scissors beat Paper' : 'You win! Paper beats Rock'
+                if (computerSelection == 'Rock') {
+                    computer_wins+=1
+                    return 'You Lose! Rock beats Scissors'
+                } else {
+                    player_wins+=1
+                    return 'You win! Scissors beat Paper'
+                }
+            }
+            else if (playerSelection == 'Paper') {
+                if (computerSelection == 'Paper') {
+                    computer_wins  = 1
+                    return 'You Lose! Scissors beat Paper'
+                } else {
+                    player_wins+=1
+                    return 'You win! Paper beats Rock'
+
+                }
             } else {
                 return "Something went wrong"
             }
         }
 
-        // Write a NEW function called game(). Call the playRound function inside of this one to play a 5 
-        // round game that keeps score and reports a winner or loser at the end.
-        
-        // Remember loops? This is a great opportunity to use one to play those five rounds:
-
-        // for (let i = 0; i < 5; i++) {
-        //     // your code here!
-        // }       
-
-        // At this point you should be using console.log() to display the results of each round and the winner at the end.
-        // Use prompt() to get input from the user. Read the docs here if you need to.
-        // Feel free to re-work your previous functions if you need to. Specifically, you might want to 
-        // change the return value to something more useful.
-        // Feel free to create more “helper” functions if you think it would be useful.
 
         function game(){
+
             for (let i=0; i<5; i++){
                 const playerSelection = getPlayerChoice();
                 const computerSelection = getComputerChoice();
                 const winner = playRound(playerSelection, computerSelection)
                 console.log(`You threw out ${playerSelection} and the computer chose ${computerSelection}! ${winner}`) 
+            }
+
+            console.log(`You have ${player_wins} point(s) and the computer has ${computer_wins} point(s)`)
+            if (player_wins==computer_wins) {
+                console.log('Tied Game!')
+            } else if (player_wins > computer_wins) {
+                console.log('You won!')
+            } else {
+                console.log('You lost')
             }
 
         }
