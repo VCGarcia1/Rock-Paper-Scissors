@@ -4,12 +4,24 @@
         <title>Rock Paper Scissors</title>
     </head>
     <body>
+        <div id="container">
+            <div class = 'buttons'>
+                <button class ='choice'>Rock</button>
+                <button class ='choice'>Paper</button>
+                <button class ='choice'>Scissors</button>
+            </div>
+            <div class = 'results'>
+
+            </div>
+    </div>
         <script src="script.js"></script>
     </body>
     <script>
 
-        let player_wins = 0
-        let computer_wins = 0
+        let playerWins = 0;
+        let computerWins = 0;
+        let resetGame = false;
+
 
         // Create randomized choice by computer
         function getComputerChoice(){
@@ -17,47 +29,54 @@
             return choice[Math.floor(Math.random()*3)]
         };
 
-        // Prompt user for game choice
-        function getPlayerChoice() {
-           let playerSelection = prompt('Rock, Paper, or Scissors?')
-           playerSelection = playerSelection[0].toUpperCase() + playerSelection.slice(1).toLowerCase()
-           if (playerSelection == 'Rock' || playerSelection == 'Paper' || playerSelection == 'Scissors') {
-                return playerSelection
-           } else {
-                console.log('You did not enter a valid option')
-                getPlayerChoice()
-           }
+        // Display results of the round
+        function displayResults(playerSelection) {
 
+            const results = document.querySelector('.results')
+            results.innerText = ''
+            const computerSelection = getComputerChoice();
+            const winner = playRound(playerSelection, computerSelection)
+            
+
+
+            const p1 = document.createElement('p');
+            p1.textContent = 'You throw...' + playerSelection;
+            results.appendChild(p1);
+            p2 = document.createElement('p');
+            p2.textContent = 'The computer throws...' + computerSelection;
+            results.appendChild(p2);
+            const h3 = document.createElement('h3');
+            h3.textContent = winner
+            results.appendChild(h3)
         }
 
         // Play one round of Rock, Paper, Scissors
         function playRound(playerSelection, computerSelection){
-            //Make player's selection case insensitive
             if (playerSelection === computerSelection){
                 return 'You tied this round!'
             } else if (playerSelection == 'Rock') {
                 if (computerSelection == 'Paper') {
-                    computer_wins+=1
+                    computerWins+=1
                     return 'You Lose! Paper beats Rock'
                 } else {
-                    player_wins+=1
+                    playerWins+=1
                     return 'You win! Rock beats Scissors'
                 }
             } else if (playerSelection == 'Scissors') {
                 if (computerSelection == 'Rock') {
-                    computer_wins+=1
+                    computerWins+=1
                     return 'You Lose! Rock beats Scissors'
                 } else {
-                    player_wins+=1
+                    playerWins+=1
                     return 'You win! Scissors beat Paper'
                 }
             }
             else if (playerSelection == 'Paper') {
-                if (computerSelection == 'Paper') {
-                    computer_wins  = 1
+                if (computerSelection == 'Scissors') {
+                    computerWins+=1
                     return 'You Lose! Scissors beat Paper'
                 } else {
-                    player_wins+=1
+                    playerWins+=1
                     return 'You win! Paper beats Rock'
 
                 }
@@ -66,26 +85,56 @@
             }
         }
 
+        
 
-        function game(){
+            
+            const container = document.querySelector('#container')
+            const buttons = document.querySelector('.buttons')
 
-            for (let i=0; i<5; i++){
-                const playerSelection = getPlayerChoice();
-                const computerSelection = getComputerChoice();
-                const winner = playRound(playerSelection, computerSelection)
-                console.log(`You threw out ${playerSelection} and the computer chose ${computerSelection}! ${winner}`) 
-            }
+            const points = document.createElement('points')
+            points.innerText = 'You: ' + playerWins + "\n Computer: " + computerWins 
+            container.insertBefore(points, buttons)
+            const choices = document.querySelectorAll('.choice')
 
-            console.log(`You have ${player_wins} point(s) and the computer has ${computer_wins} point(s)`)
-            if (player_wins==computer_wins) {
-                console.log('Tied Game!')
-            } else if (player_wins > computer_wins) {
-                console.log('You won!')
-            } else {
-                console.log('You lost')
-            }
 
-        }
+            choices.forEach(function(button) {
+                button.addEventListener('click', () => {
+                    const results = document.querySelector('.results')
+                    const playerSelection = button.innerText
+                    if(resetGame) {
+                        playerWins = 0
+                        computerWins = 0
+                        results.innerText = ''
+                        resetGame = false
+                    }
+                    displayResults(playerSelection)
+                    points.innerText = 'You: ' + playerWins + '\n Computer: ' + computerWins 
+                    container.insertBefore(points, buttons)
+
+         
+                    if (playerWins == 5 || computerWins == 5) {
+                        const gameOver = document.createElement('h2')
+                        const finalWinner = (playerWins == 5) ? 'You earned 5 points! You win!' : 'The computer earned 5 points. Sorry, you lost.'
+                        gameOver.textContent = finalWinner
+                        gameOver.style.color = 'red'
+                        results.appendChild(gameOver)
+                        resetGame = true;
+    
+                    }
+    
+                    
+
+                })
+            
+            })
+        
+        
+        
+            
+
+
+
+        // }
 
 
     </script>
